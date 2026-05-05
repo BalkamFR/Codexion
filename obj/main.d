@@ -1,3 +1,3 @@
-obj/main.o: main.c header.h
+obj/main.o: main.c includes/codexion.h
 
-header.h:
+includes/codexion.h:

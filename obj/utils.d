@@ -1,3 +1,3 @@
-obj/utils.o: utils.c header.h
+obj/utils.o: utils.c includes/codexion.h
 
-header.h:
+includes/codexion.h:

@@ -6,11 +6,11 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:48:48 by papilaz           #+#    #+#             */
-/*   Updated: 2026/05/04 01:57:13 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/05/04 22:05:45 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "header.h"
+#include "includes/codexion.h"
 
 int	verif_argv(char **argv)
 {
@@ -23,7 +23,7 @@ int	verif_argv(char **argv)
 	{
 		while (argv[i][a])
 		{
-			if (!ft_is_number(argv[i][a]) || atoi(argv[i]) == 0)
+			if (!ft_is_number(argv[i][a]) || atoi(argv[i]) <= 0)
 			{
 				write_error("[Error] negative value or str is forbiden\n");	
 				return (0);

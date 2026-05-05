@@ -1,27 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   coder.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/03 19:55:42 by papilaz           #+#    #+#             */
-/*   Updated: 2026/05/04 21:46:42 by papilaz          ###   ########.fr       */
+/*   Created: 2026/05/04 21:45:01 by papilaz           #+#    #+#             */
+/*   Updated: 2026/05/04 21:46:08 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/codexion.h"
-
-
-int main(int argc, char **argv)
-{
-	t_list *setting;
-	
-	setting = parser(argv + 1);
-	if (!setting)
-		return (1);
-	(void)argc;
-	printf("%d", setting->number_of_coders);
-	// free(setting);
-	return 0;
-}

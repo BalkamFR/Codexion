@@ -1,3 +1,3 @@
-obj/parsing.o: parsing.c header.h
+obj/parsing.o: parsing.c includes/codexion.h
 
-header.h:
+includes/codexion.h:
