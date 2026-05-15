@@ -6,11 +6,26 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:48:48 by papilaz           #+#    #+#             */
-/*   Updated: 2026/05/04 22:05:45 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/05/15 22:53:54 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/codexion.h"
+
+int verif_scheduler(char *tab, char *tab_2)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i] || tab_2[i])
+	{
+		if (tab[i] != tab_2[i])
+			return 0;
+		i++;
+	}
+	return 1;
+}
+
 
 int	verif_argv(char **argv)
 {
@@ -19,7 +34,7 @@ int	verif_argv(char **argv)
 
 	i = 0;
 	a = 0;
-	while (argv[i])
+	while (i <= 6)
 	{
 		while (argv[i][a])
 		{
@@ -33,17 +48,35 @@ int	verif_argv(char **argv)
 		a = 0;
 		i++;
 	}
+	if (!verif_scheduler(argv[7], "fifo") && !verif_scheduler(argv[7], "edf"))
+	{
+		write_error("[Error] arg is not fifo or edf\n");
+		return 0;
+	}
 	return (1);
 }
 
-t_list *parser(char **argv)
+int init_all_coder(t_data *setting, t_coder **coder)
 {
-	t_list *setting;
+	int i;
+
+	i = 1;
+	while (i < setting->number_of_coders)
+	{
+		(*coder)[i].id = i;
+		i++;
+	}
+	return (0);
+}
+
+t_data *parser(char **argv)
+{
+	t_data *setting;
 
 	(void)argv;
 	if (!verif_argv(argv))
 		return 0;
-	setting = malloc(sizeof(t_list));
+	setting = malloc(sizeof(t_data));
 	if (!setting)
 		return 0;
 	setting->number_of_coders = atoi(argv[0]);
@@ -52,8 +85,8 @@ t_list *parser(char **argv)
 	setting -> time_to_debug = atoi(argv[3]);
 	setting -> time_to_refactor = atoi(argv[4]);
 	setting -> number_of_compiles_required = atoi(argv[5]);
-	// setting -> dongle_cooldown = atoi(argv[6]);
-	// setting -> scheduler = atoi(argv[7]);
+	setting -> dongle_cooldown = atoi(argv[6]);
+	setting -> scheduler = atoi(argv[7]);
 	
 	return(setting);
 }

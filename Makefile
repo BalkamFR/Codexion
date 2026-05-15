@@ -30,7 +30,7 @@ clean:
 	@rm -rf $(OBJ_DIR)
 
 run: all
-	@./$(NAME) 2147 10 200 200 200 21474
+	@./$(NAME) 10 10 200 200 200 214 74 edf
 
 fclean: clean
 	@rm -f $(NAME)
