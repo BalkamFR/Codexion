@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:55:42 by papilaz           #+#    #+#             */
-/*   Updated: 2026/05/15 22:53:29 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/05/27 14:24:10 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 void	*routine(void *arg)
 {
-	t_coder *coder;
+	t_coder	*coder;
 
 	coder = (t_coder *)arg;
 	printf("%d is compiling\n", coder->id);
-	return NULL;
+	return (NULL);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_data *setting;
 	t_coder *coder;
@@ -42,15 +42,8 @@ int main(int argc, char **argv)
 		pthread_create(&coder[i].thread, NULL, routine, &coder[i]);
 		i++;
 	}
-	i =0;
-	while (i < setting->number_of_coders)
-	{
-		pthread_join(coder[i].thread, NULL);
-		i++;
-	}
+	join_all_coder(setting, coder);
 	(void)argc;
 	(void)argv;
-
-
-	return 0;
+	return (0);
 }
