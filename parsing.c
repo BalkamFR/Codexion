@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:48:48 by papilaz           #+#    #+#             */
-/*   Updated: 2026/05/27 14:22:04 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/03 21:12:28 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	verif_argv(char **argv)
 	{
 		while (argv[i][a])
 		{
-			if (!ft_is_number(argv[i][a]) || atoi(argv[i]) <= 0)
+			if (!ft_is_number(argv[i][a]) || atoi(argv[i]) < 0)
 			{
 				write_error("[Error] negative value or str is forbiden\n");
 				return (0);
@@ -55,18 +55,6 @@ int	verif_argv(char **argv)
 	return (1);
 }
 
-int	init_all_coder(t_data *setting, t_coder **coder)
-{
-	int	i;
-
-	i = 0;
-	while (i < setting->number_of_coders)
-	{
-		(*coder)[i].id = i + 1;
-		i++;
-	}
-	return (0);
-}
 
 t_data	*parser(char **argv)
 {
@@ -78,6 +66,7 @@ t_data	*parser(char **argv)
 	setting = malloc(sizeof(t_data));
 	if (!setting)
 		return (0);
+	setting->queue = NULL;
 	setting->number_of_coders = atoi(argv[0]);
 	setting->time_to_burnout = atoi(argv[1]);
 	setting->time_to_compile = atoi(argv[2]);
@@ -85,12 +74,13 @@ t_data	*parser(char **argv)
 	setting->time_to_refactor = atoi(argv[4]);
 	setting->number_of_compiles_required = atoi(argv[5]);
 	setting->dongle_cooldown = atoi(argv[6]);
-	setting->scheduler = atoi(argv[7]);
+	setting->scheduler = argv[7];
 	setting->queue = NULL;
 	setting->stop_sim = 0;
 	setting->dongle_status = malloc(sizeof(int) * setting->number_of_coders);
 	pthread_mutex_init(&setting->queue_mutex, NULL);
 	pthread_mutex_init(&setting->stop_mutex, NULL);
 	pthread_cond_init(&setting->queue_cond, NULL);
+	pthread_mutex_init(&setting->write_mutex, NULL);
 	return (setting);
 }

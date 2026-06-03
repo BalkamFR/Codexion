@@ -5,6 +5,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include <sys/time.h>
+#include <string.h>
 typedef struct s_node
 {
 	struct s_coder	*coder;
@@ -20,7 +22,7 @@ typedef struct s_data
 	int				time_to_refactor;
 	int				number_of_compiles_required;
 	int				dongle_cooldown;
-	int				scheduler;
+	char				*scheduler;
 	pthread_mutex_t	*dongles;
 	pthread_mutex_t	write_mutex;
 	t_node			*queue;
@@ -39,6 +41,7 @@ typedef struct s_coder
 	t_data			*data;
 	pthread_mutex_t	*left_dongle;
 	pthread_mutex_t	*right_dongle;
+	long int    last_compile_start;
 }					t_coder;
 
 
@@ -47,5 +50,11 @@ void				write_error(char *tab);
 int					ft_strlen(char *tab);
 int					ft_is_number(char number);
 int					init_all_coder(t_data *setting, t_coder **coder);
+int create_all_coder(t_coder *coder, t_data *setting, void *(*routine)(void *));
 void join_all_coder(t_data *setting, t_coder *coder);
+int	push_to_queue(t_data *data, t_coder *coder);
+int 	pop_queue(t_data *data);
+long int get_time(void);
+void    print_status(t_coder *coder, char *status);
+void    *monitor(void *arg);
 #endif

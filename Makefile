@@ -10,6 +10,8 @@ INCLUDES    = -I. -Iutils
 SRCS        = main.c \
               parsing.c \
 			  utils.c \
+			  coder.c \
+
 
 OBJS        = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
@@ -30,7 +32,7 @@ clean:
 	@rm -rf $(OBJ_DIR)
 
 run: all
-	@./$(NAME) 10 10 200 200 200 214 74 edf
+	@./$(NAME)  10 5000 200 100 100 5 0 fifo
 
 fclean: clean
 	@rm -f $(NAME)
