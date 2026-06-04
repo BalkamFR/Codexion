@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:48:48 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/03 21:12:28 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/04 14:44:44 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,17 @@ int	verif_argv(char **argv)
 	return (1);
 }
 
+void init_dongles(t_data *data)
+{
+	int i ;
+
+	i = 0;
+	while (i < data->number_of_coders)
+	{
+		pthread_mutex_init(&data->dongles[i], NULL);
+		i++;
+	}
+}
 
 t_data	*parser(char **argv)
 {
@@ -78,6 +89,8 @@ t_data	*parser(char **argv)
 	setting->queue = NULL;
 	setting->stop_sim = 0;
 	setting->dongle_status = malloc(sizeof(int) * setting->number_of_coders);
+	setting->dongles = malloc(sizeof(pthread_mutex_t) * setting->number_of_coders);
+	init_dongles(setting);
 	pthread_mutex_init(&setting->queue_mutex, NULL);
 	pthread_mutex_init(&setting->stop_mutex, NULL);
 	pthread_cond_init(&setting->queue_cond, NULL);

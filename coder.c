@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 21:45:01 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/03 21:13:21 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/04 14:58:54 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,69 +22,42 @@ int	init_all_coder(t_data *setting, t_coder **coder)
 		(*coder)[i].data = setting;
 		(*coder)[i].id = i + 1;
 		(*coder)[i].last_compile_start = get_time();
+		(*coder)[i].left_dongle = &setting[i].dongles[i];
+		if (i < setting->number_of_coders - 1)
+			(*coder)[i].right_dongle = &setting[i + 1].dongles[i];
+		else
+			(*coder)[i].right_dongle = &setting[0].dongles[0];
 		i++;
 	}
 	return (0);
 }
 
-int create_all_coder(t_coder *coder, t_data *setting, void *(*routine)(void *))
+int	create_all_coder(t_coder *coder, t_data *setting, void *(*routine)(void *))
 {
-    int i ;
+	int	i;
 
-    i = 0;
-    while (i < setting->number_of_coders)
-    {
-        pthread_create(&coder[i].thread, NULL, routine, &coder[i]);
-        i++;
-    }
-    return 0;
-}
-
-int 	pop_queue(t_data *data)
-{
-	t_node *tmp;
-	if (!data->queue)
-		return 1;
-	
-	tmp = data->queue;
-	data->queue = tmp->next;
-	free(tmp);
-	return 0;
-}
-
-int	push_to_queue(t_data *data, t_coder *coder)
-{
-	t_node *new_node;
-	t_node *tmp;
-
-	new_node = malloc(sizeof(t_node));
-	if (!new_node)
-		return 1;
-	new_node->coder = coder;
-	new_node->next = NULL;
-	if (!data->queue)
-		data->queue = new_node;
-	else
+	i = 0;
+	while (i < setting->number_of_coders)
 	{
-		tmp = data->queue;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new_node;
+		pthread_create(&coder[i].thread, NULL, routine, &coder[i]);
+		i++;
 	}
-	return 0;
+	return (0);
 }
-void    *monitor(void *arg)
+void	*monitor(void *arg)
 {
-	int  i;
-	long int time;
+	int			i;
+	long int	time;
+	t_coder		*coders;
 
-	t_coder *coders = (t_coder *)arg;
+	coders = (t_coder *)arg;
 	while (!coders[0].data->stop_sim)
 	{
 		i = 0;
 		while (i < coders->data->number_of_coders)
 		{
-			if (get_time() - coders[i].last_compile_start > coders[i].data->time_to_burnout)
+			if (get_time()
+				- coders[i].last_compile_start > coders[i].data->time_to_burnout)
 			{
 				pthread_mutex_lock(&coders->data->write_mutex);
 				coders->data->stop_sim = 1;

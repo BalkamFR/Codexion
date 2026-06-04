@@ -11,6 +11,7 @@ SRCS        = main.c \
               parsing.c \
 			  utils.c \
 			  coder.c \
+			  queue.c \
 
 
 OBJS        = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
