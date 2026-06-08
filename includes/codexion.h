@@ -39,6 +39,7 @@ typedef struct s_coder
 	int				id;
 	pthread_t		thread;
 	t_data			*data;
+	int			compile_count;
 	pthread_mutex_t	*left_dongle;
 	pthread_mutex_t	*right_dongle;
 	long int    last_compile_start;

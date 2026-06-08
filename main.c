@@ -6,11 +6,12 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:55:42 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/03 20:51:41 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/08 18:46:11 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/codexion.h"
+
 void	*routine(void *arg)	
 {
 	t_coder	*coder;
@@ -25,9 +26,11 @@ void	*routine(void *arg)
 		pthread_mutex_lock(&coder->data->queue_mutex);
 		push_to_queue(coder->data, coder);
 		while (coder->data->queue->coder != coder || 
-			coder->data->dongle_status[left] == 1 || 
-			coder->data->dongle_status[right] == 1)
+			coder->data->dongle_status[right] == 1 || 
+			coder->data->dongle_status[left] == 1)
 			pthread_cond_wait(&coder->data->queue_cond, &coder->data->queue_mutex);
+		pthread_mutex_lock(coder->left_dongle);
+		pthread_mutex_lock(coder->right_dongle);
 		coder->data->dongle_status[right] = 1;
 		coder->data->dongle_status[left] = 1;
 		print_status(coder, "has taken a dongle");
@@ -38,6 +41,8 @@ void	*routine(void *arg)
 		coder->last_compile_start = get_time();
 		usleep(coder->data->time_to_compile * 1000);
 		pthread_mutex_lock(&coder->data->queue_mutex);
+		pthread_mutex_unlock(coder->right_dongle);
+		pthread_mutex_unlock(coder->left_dongle);
 		coder->data->dongle_status[right] = 0;
 		coder->data->dongle_status[left] = 0;
 		pthread_cond_broadcast(&coder->data->queue_cond);
@@ -49,7 +54,6 @@ void	*routine(void *arg)
 	}
 	return (NULL);
 }
-
 
 int	main(int argc, char **argv)
 {
@@ -66,8 +70,8 @@ int	main(int argc, char **argv)
 		return (1);
 	memset(setting->dongle_status, 0, sizeof(int) * setting->number_of_coders);
 	init_all_coder(setting, &coder);
-	pthread_create(&moni, NULL, monitor, coder);
 	create_all_coder(coder, setting, routine);
+	pthread_create(&moni, NULL, monitor, coder);
 	join_all_coder(setting, coder);
 	pthread_join(moni, NULL);
 	(void)argc;

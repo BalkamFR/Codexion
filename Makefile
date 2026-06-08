@@ -33,7 +33,7 @@ clean:
 	@rm -rf $(OBJ_DIR)
 
 run: all
-	@./$(NAME)  10 5000 200 100 100 5 0 fifo
+	@./$(NAME)  10 500 200 100 100 5 2 fifo
 
 fclean: clean
 	@rm -f $(NAME)

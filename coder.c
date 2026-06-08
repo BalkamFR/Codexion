@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 21:45:01 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/04 14:58:54 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/08 18:55:00 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ int	init_all_coder(t_data *setting, t_coder **coder)
 		(*coder)[i].data = setting;
 		(*coder)[i].id = i + 1;
 		(*coder)[i].last_compile_start = get_time();
-		(*coder)[i].left_dongle = &setting[i].dongles[i];
+		(*coder)[i].compile_count = 0;
+		(*coder)[i].left_dongle = &setting->dongles[i];
 		if (i < setting->number_of_coders - 1)
-			(*coder)[i].right_dongle = &setting[i + 1].dongles[i];
+			(*coder)[i].right_dongle = &setting->dongles[i + 1];
 		else
-			(*coder)[i].right_dongle = &setting[0].dongles[0];
+			(*coder)[i].right_dongle = &setting->dongles[0];
 		i++;
 	}
 	return (0);
@@ -68,6 +69,7 @@ void	*monitor(void *arg)
 			}
 			i++;
 		}
+		// printf("compt : %d \n", i);
 		usleep(1000);
 	}
 	return (NULL);
