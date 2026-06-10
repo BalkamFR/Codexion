@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:55:42 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/08 18:46:11 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/10 14:41:34 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	*routine(void *arg)
 		print_status(coder, "is compiling");
 		coder->last_compile_start = get_time();
 		usleep(coder->data->time_to_compile * 1000);
+		coder->compile_count ++;
 		pthread_mutex_lock(&coder->data->queue_mutex);
 		pthread_mutex_unlock(coder->right_dongle);
 		pthread_mutex_unlock(coder->left_dongle);

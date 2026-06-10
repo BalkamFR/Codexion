@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 21:45:01 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/08 18:55:00 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/10 14:53:26 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	create_all_coder(t_coder *coder, t_data *setting, void *(*routine)(void *))
 void	*monitor(void *arg)
 {
 	int			i;
+	int			all_done;
 	long int	time;
 	t_coder		*coders;
 
@@ -55,8 +56,11 @@ void	*monitor(void *arg)
 	while (!coders[0].data->stop_sim)
 	{
 		i = 0;
+		all_done = 1;
 		while (i < coders->data->number_of_coders)
 		{
+			if (coders[i].compile_count < coders->data->number_of_compiles_required)
+				all_done = 0;
 			if (get_time()
 				- coders[i].last_compile_start > coders[i].data->time_to_burnout)
 			{
@@ -69,7 +73,13 @@ void	*monitor(void *arg)
 			}
 			i++;
 		}
-		// printf("compt : %d \n", i);
+		if (all_done == 1)
+		{
+			pthread_mutex_lock(&coders->data->write_mutex);
+			coders[0].data->stop_sim = 1;
+			pthread_mutex_unlock(&coders->data->write_mutex);
+			return (NULL);
+		}
 		usleep(1000);
 	}
 	return (NULL);

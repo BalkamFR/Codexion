@@ -33,7 +33,9 @@ clean:
 	@rm -rf $(OBJ_DIR)
 
 run: all
-	@./$(NAME)  10 500 200 100 100 5 2 fifo
+	@./$(NAME)  5 200 200 100 100 500 20 fifo
+
+# number_of_coders time_to_burnout time_to_compile time_to_debug time_to_refactor number_of_compiles_required dongle_cooldown scheduler
 
 fclean: clean
 	@rm -f $(NAME)
