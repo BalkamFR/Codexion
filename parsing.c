@@ -3,30 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pacome <pacome@student.42.fr>              +#+  +:+       +#+        */
+/*   By: papilaz <papilaz@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:48:48 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/12 13:28:31 by pacome           ###   ########.fr       */
+/*   Updated: 2026/06/12 23:14:57 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/codexion.h"
 
-int	verif_scheduler(char *tab, char *tab_2)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i] || tab_2[i])
-	{
-		if (tab[i] != tab_2[i])
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	verif_argv(char **argv)
+static int	verif_argv(char **argv)
 {
 	int	i;
 	int	a;
@@ -47,7 +33,7 @@ int	verif_argv(char **argv)
 		a = 0;
 		i++;
 	}
-	if (!verif_scheduler(argv[7], "fifo") && !verif_scheduler(argv[7], "edf"))
+	if (!ft_strcmp(argv[7], "fifo") && !ft_strcmp(argv[7], "edf"))
 	{
 		write_error("[Error] arg is not fifo or edf\n");
 		return (0);
@@ -55,9 +41,9 @@ int	verif_argv(char **argv)
 	return (1);
 }
 
-void init_dongles(t_data *data)
+static void	init_dongles(t_data *data)
 {
-	int i ;
+	int	i;
 
 	i = 0;
 	while (i < data->number_of_coders)
@@ -65,6 +51,30 @@ void init_dongles(t_data *data)
 		pthread_mutex_init(&data->dongles[i], NULL);
 		i++;
 	}
+}
+
+static void	parser_init_atoi(t_data *setting, char **argv)
+{
+	setting->time_to_burnout = atoi(argv[1]);
+	setting->time_to_compile = atoi(argv[2]);
+	setting->time_to_debug = atoi(argv[3]);
+	setting->time_to_refactor = atoi(argv[4]);
+	setting->number_of_compiles_required = atoi(argv[5]);
+	setting->dongle_cooldown = atoi(argv[6]);
+	setting->scheduler = argv[7];
+	setting->stop_sim = 0;
+}
+
+static int	parsing_malloc(t_data *setting)
+{
+	setting->dongle_status = malloc(sizeof(int) * setting->number_of_coders);
+	if (!setting->dongle_status)
+		return (0);
+	setting->dongles = malloc(sizeof(pthread_mutex_t)
+			* setting->number_of_coders);
+	if (!setting->dongles)
+		return (0);
+	return (1);
 }
 
 t_data	*parser(char **argv)
@@ -79,22 +89,15 @@ t_data	*parser(char **argv)
 		return (0);
 	setting->queue = NULL;
 	setting->number_of_coders = atoi(argv[0]);
-    setting->dongle_last_released = malloc(sizeof(long int) * setting->number_of_coders);
-    if (!setting->dongle_last_released)
-        return (0);
-    memset(setting->dongle_last_released, 0, sizeof(long int) * setting->number_of_coders);
-	setting->time_to_burnout = atoi(argv[1]);
-	setting->time_to_compile = atoi(argv[2]);
-	setting->time_to_debug = atoi(argv[3]);
-	setting->time_to_refactor = atoi(argv[4]);
-	setting->number_of_compiles_required = atoi(argv[5]);
-	setting->dongle_cooldown = atoi(argv[6]);
-	setting->scheduler = argv[7];
-	setting->queue = NULL;
-	setting->stop_sim = 0;
-	setting->dongle_status = malloc(sizeof(int) * setting->number_of_coders);
-	setting->dongles = malloc(sizeof(pthread_mutex_t) * setting->number_of_coders);
-    
+	setting->dongle_last_released = malloc(sizeof(long int)
+			* setting->number_of_coders);
+	if (!setting->dongle_last_released)
+		return (0);
+	memset(setting->dongle_last_released, 0, sizeof(long int)
+		* setting->number_of_coders);
+	parser_init_atoi(setting, argv);
+	if (!parsing_malloc(setting))
+		return (0);
 	init_dongles(setting);
 	pthread_mutex_init(&setting->queue_mutex, NULL);
 	pthread_mutex_init(&setting->stop_mutex, NULL);

@@ -10,8 +10,11 @@ INCLUDES    = -I. -Iutils
 SRCS        = main.c \
               parsing.c \
 			  utils.c \
+			  utils_coder.c \
 			  coder.c \
 			  queue.c \
+			  routine.c \
+			  monitor.c \
 
 
 OBJS        = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

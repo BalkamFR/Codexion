@@ -1,12 +1,25 @@
-#ifndef HEADER_H
-# define HEADER_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   codexion.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: papilaz <papilaz@student.42lyon.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/12 23:07:25 by pacome            #+#    #+#             */
+/*   Updated: 2026/06/12 23:18:42 by papilaz          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CODEXION_H
+# define CODEXION_H
 
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
+# include <sys/time.h>
 # include <unistd.h>
-#include <sys/time.h>
-#include <string.h>
+
 typedef struct s_node
 {
 	struct s_coder	*coder;
@@ -22,7 +35,7 @@ typedef struct s_data
 	int				time_to_refactor;
 	int				number_of_compiles_required;
 	int				dongle_cooldown;
-	char				*scheduler;
+	char			*scheduler;
 	pthread_mutex_t	*dongles;
 	pthread_mutex_t	write_mutex;
 	t_node			*queue;
@@ -32,7 +45,7 @@ typedef struct s_data
 	int				stop_sim;
 	pthread_mutex_t	stop_mutex;
 	int				*dongle_status;
-    long int *dongle_last_released;
+	long int		*dongle_last_released;
 }					t_data;
 
 typedef struct s_coder
@@ -40,24 +53,27 @@ typedef struct s_coder
 	int				id;
 	pthread_t		thread;
 	t_data			*data;
-	int			compile_count;
+	int				compile_count;
 	pthread_mutex_t	*left_dongle;
 	pthread_mutex_t	*right_dongle;
-	long int    last_compile_start;
+	long int		last_compile_start;
 }					t_coder;
 
-
 t_data				*parser(char **argv);
+int					ft_strcmp(char *tab, char *tab_2);
+int					init_all_coder(t_data *setting, t_coder **coder);
+int					create_all_coder(t_coder *coder, t_data *setting,
+						void *(*routine)(void *));
+void				join_all_coder(t_data *setting, t_coder *coder);
+int					push_to_queue(t_data *data, t_coder *coder);
+int					pop_queue(t_data *data);
+void				*routine(void *arg);
+void				routine_compiling(t_coder *coder);
+void				*monitor(void *arg);
+long int			get_time(void);
+void				print_status(t_coder *coder, char *status);
 void				write_error(char *tab);
 int					ft_strlen(char *tab);
 int					ft_is_number(char number);
-int					init_all_coder(t_data *setting, t_coder **coder);
-int create_all_coder(t_coder *coder, t_data *setting, void *(*routine)(void *));
-void join_all_coder(t_data *setting, t_coder *coder);
-int	push_to_queue(t_data *data, t_coder *coder);
-int 	pop_queue(t_data *data);
-long int get_time(void);
-void    print_status(t_coder *coder, char *status);
-void    *monitor(void *arg);
-int	verif_scheduler(char *tab, char *tab_2);
+
 #endif
