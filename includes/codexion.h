@@ -32,6 +32,7 @@ typedef struct s_data
 	int				stop_sim;
 	pthread_mutex_t	stop_mutex;
 	int				*dongle_status;
+    long int *dongle_last_released;
 }					t_data;
 
 typedef struct s_coder
@@ -58,4 +59,5 @@ int 	pop_queue(t_data *data);
 long int get_time(void);
 void    print_status(t_coder *coder, char *status);
 void    *monitor(void *arg);
+int	verif_scheduler(char *tab, char *tab_2);
 #endif

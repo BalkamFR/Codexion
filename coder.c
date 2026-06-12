@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coder.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pacome <pacome@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 21:45:01 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/10 14:53:26 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/12 14:19:44 by pacome           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,22 @@ int	init_all_coder(t_data *setting, t_coder **coder)
 		(*coder)[i].id = i + 1;
 		(*coder)[i].last_compile_start = get_time();
 		(*coder)[i].compile_count = 0;
-		(*coder)[i].left_dongle = &setting->dongles[i];
-		if (i < setting->number_of_coders - 1)
-			(*coder)[i].right_dongle = &setting->dongles[i + 1];
-		else
-			(*coder)[i].right_dongle = &setting->dongles[0];
+        if ((*coder)[i].id % 2 == 0)
+        {
+            (*coder)[i].left_dongle = &setting->dongles[i];
+            if (i < setting->number_of_coders - 1)
+			    (*coder)[i].right_dongle = &setting->dongles[i + 1];
+            else
+			    (*coder)[i].right_dongle = &setting->dongles[0];
+        }
+        else
+        {
+            (*coder)[i].right_dongle = &setting->dongles[i];
+            if (i < setting->number_of_coders - 1)
+			    (*coder)[i].left_dongle = &setting->dongles[i + 1];
+            else
+			    (*coder)[i].left_dongle = &setting->dongles[0];
+        }
 		i++;
 	}
 	return (0);
@@ -69,6 +80,7 @@ void	*monitor(void *arg)
 				time = get_time() - coders[i].data->start_time;
 				printf("%ld %d %s\n", time, coders[i].id, "burned out");
 				pthread_mutex_unlock(&coders->data->write_mutex);
+                pthread_cond_broadcast(&coders->data->queue_cond);
 				return (NULL);
 			}
 			i++;
@@ -78,8 +90,10 @@ void	*monitor(void *arg)
 			pthread_mutex_lock(&coders->data->write_mutex);
 			coders[0].data->stop_sim = 1;
 			pthread_mutex_unlock(&coders->data->write_mutex);
+            pthread_cond_broadcast(&coders->data->queue_cond);
 			return (NULL);
 		}
+        pthread_cond_broadcast(&coders->data->queue_cond);
 		usleep(1000);
 	}
 	return (NULL);

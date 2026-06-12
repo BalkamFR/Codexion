@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: papilaz <papilaz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: pacome <pacome@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:48:48 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/04 14:44:44 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/06/12 13:28:31 by pacome           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,10 @@ t_data	*parser(char **argv)
 		return (0);
 	setting->queue = NULL;
 	setting->number_of_coders = atoi(argv[0]);
+    setting->dongle_last_released = malloc(sizeof(long int) * setting->number_of_coders);
+    if (!setting->dongle_last_released)
+        return (0);
+    memset(setting->dongle_last_released, 0, sizeof(long int) * setting->number_of_coders);
 	setting->time_to_burnout = atoi(argv[1]);
 	setting->time_to_compile = atoi(argv[2]);
 	setting->time_to_debug = atoi(argv[3]);
@@ -90,6 +94,7 @@ t_data	*parser(char **argv)
 	setting->stop_sim = 0;
 	setting->dongle_status = malloc(sizeof(int) * setting->number_of_coders);
 	setting->dongles = malloc(sizeof(pthread_mutex_t) * setting->number_of_coders);
+    
 	init_dongles(setting);
 	pthread_mutex_init(&setting->queue_mutex, NULL);
 	pthread_mutex_init(&setting->stop_mutex, NULL);
