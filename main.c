@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:55:42 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/12 23:29:22 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/07/26 17:16:29 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	main(int argc, char **argv)
 {
 	t_data	*setting;
 
-	if (argc != 9)
+	if (argc != 9 || atoi(argv[1]) <= 0)
 	{
 		write_error("");
 		return (1);

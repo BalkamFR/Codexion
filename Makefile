@@ -4,7 +4,7 @@ OBJ_DIR     = obj
 INC_DIR     = includes
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -g3
+CFLAGS      = -Wall -Wextra -Werror -pthread
 INCLUDES    = -I. -Iutils
 
 SRCS        = main.c \
@@ -14,8 +14,8 @@ SRCS        = main.c \
 			  coder.c \
 			  queue.c \
 			  routine.c \
+			  routine_2.c \
 			  monitor.c \
-
 
 OBJS        = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
@@ -36,13 +36,11 @@ clean:
 	@rm -rf $(OBJ_DIR)
 
 run: all
-	@./$(NAME)  5 200 200 100 100 500 200 fifo
+	@./$(NAME)  5 300 2 10 10 50 2 fifo
 
 # number_of_coders time_to_burnout time_to_compile time_to_debug time_to_refactor number_of_compiles_required dongle_cooldown scheduler
-
 fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all
-
 .PHONY: all clean fclean re

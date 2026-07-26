@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/03 19:48:48 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/12 23:14:57 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/07/25 14:12:10 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ t_data	*parser(char **argv)
 {
 	t_data	*setting;
 
-	(void)argv;
 	if (!verif_argv(argv))
 		return (0);
 	setting = malloc(sizeof(t_data));

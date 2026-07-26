@@ -6,7 +6,7 @@
 /*   By: papilaz <papilaz@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 23:07:25 by pacome            #+#    #+#             */
-/*   Updated: 2026/06/12 23:18:42 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/07/26 17:17:03 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,12 @@ void				print_status(t_coder *coder, char *status);
 void				write_error(char *tab);
 int					ft_strlen(char *tab);
 int					ft_is_number(char number);
+void				*routine_while(t_coder *coder, int stopped, int left,
+						int right);
+
+void				routine_pthread_mutex_dongles(t_coder *coder, char *status,
+						int right, int left);
+void				debug_and_refactor(t_coder *coder);
+void				wait_in_queue(t_coder *coder, int right, int left);
 
 #endif

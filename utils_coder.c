@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_2.c                                          :+:      :+:    :+:   */
+/*   utils_coder.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: papilaz <papilaz@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 23:13:48 by papilaz           #+#    #+#             */
-/*   Updated: 2026/06/12 23:16:24 by papilaz          ###   ########.fr       */
+/*   Updated: 2026/07/25 14:08:42 by papilaz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ void	routine_compiling(t_coder *coder)
 {
 	pop_queue(coder->data);
 	pthread_mutex_unlock(&coder->data->queue_mutex);
-	print_status(coder, "is compiling");
 	coder->last_compile_start = get_time();
+	print_status(coder, "is compiling");
 	usleep(coder->data->time_to_compile * 1000);
 	coder->compile_count++;
 	pthread_mutex_lock(&coder->data->queue_mutex);
